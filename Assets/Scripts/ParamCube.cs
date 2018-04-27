@@ -3,39 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ParamCube : MonoBehaviour {
-    public int _band;
-    public float _startScale, _maxScale;
-    public bool _useBuffer;
-    public Color _myColor;
+    public int band;
+    public float startScale, maxScale;
+    public bool useBuffer;
+    public Color myColor;
 
-    Material _material;
+    Material material;
 
     private void Start() {
-       _material = GetComponent<MeshRenderer>().materials[0]; 
-       //print(_material);
+       material = GetComponent<MeshRenderer>().materials[0]; 
+       //print(material);
     }
 	
 	void Update () {
-        if(_useBuffer) {
+        if(useBuffer) {
             transform.localScale = new Vector3(
                 transform.localScale.x,
-                (AudioPeer._audioBandBuffer[_band] * _maxScale) + _startScale,
+                (AudioVisualizer.audioBandBuffer[band] * maxScale) + startScale,
                 transform.localScale.z
             );
-            _material.SetColor("_Color", _myColor);
-            Color _color = new Color(AudioPeer._audioBandBuffer[_band], AudioPeer._audioBandBuffer[_band],AudioPeer._audioBandBuffer[_band]);
-            // print(_color);
-            _material.SetColor("_EmissionColor", _color);
+            material.SetColor("Color", myColor);
+            Color color = new Color(AudioVisualizer.audioBandBuffer[band], AudioVisualizer.audioBandBuffer[band],AudioVisualizer.audioBandBuffer[band]);
+            // print(color);
+            material.SetColor("EmissionColor", color);
         }
-        if(!_useBuffer){
+        if(!useBuffer){
             transform.localScale = new Vector3(
                 transform.localScale.x,
-                (AudioPeer._audioBand[_band] *_maxScale) + _startScale,
+                (AudioVisualizer.audioBand[band] *maxScale) + startScale,
                 transform.localScale.z
             );
-            _material.SetColor("_Color", _myColor);
-            Color _color = new Color(AudioPeer._audioBand[_band], AudioPeer._audioBand[_band],AudioPeer._audioBand[_band]);
-            _material.SetColor("_EmissionColor", _color); 
+            material.SetColor("Color", myColor);
+            Color color = new Color(AudioVisualizer.audioBand[band], AudioVisualizer.audioBand[band],AudioVisualizer.audioBand[band]);
+            material.SetColor("EmissionColor", color); 
         }
         
 	}

@@ -2,43 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScaleOnAmplitude : MonoBehaviour {
+public class ScaleOnamplitude : MonoBehaviour {
 
-	public float _startScale, _maxScale;
-	public bool _useBuffer;
-	Material _material;
-	public float _red, _green, _blue;
-    public AudioPeer _audioPeer;
+	public float startScale, maxScale;
+	public bool useBuffer;
+	Material material;
+	public float red, green, blue;
+    public AudioVisualizer audioVisualizer;
 
 
 	// Use this for initialization
 	void Start () {
-		_material = GetComponent<MeshRenderer>().materials[0];
+		material = GetComponent<MeshRenderer>().materials[0];
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if(_useBuffer){
+        if(useBuffer){
             transform.localScale = new Vector3(
-                (_audioPeer._AmplitudeBuffer * _maxScale) + _startScale,
-                (_audioPeer._AmplitudeBuffer * _maxScale) + _startScale,
-                (_audioPeer._AmplitudeBuffer * _maxScale) + _startScale
+                (audioVisualizer.amplitudeBuffer * maxScale) + startScale,
+                (audioVisualizer.amplitudeBuffer * maxScale) + startScale,
+                (audioVisualizer.amplitudeBuffer * maxScale) + startScale
             );
-            // _material.SetColor("_Color", _myColor);
-            Color _color = new Color(_red * _audioPeer._AmplitudeBuffer, _green * _audioPeer._Amplitude, _blue * _audioPeer._Amplitude);
-            _material.SetColor("_EmissionColor", _color); 
+            // material.SetColor("Color", myColor);
+            Color color = new Color(red * audioVisualizer.amplitudeBuffer, green * audioVisualizer.amplitude, blue * audioVisualizer.amplitude);
+            material.SetColor("EmissionColor", color); 
         }
 		
-		if(!_useBuffer) {
+		if(!useBuffer) {
             transform.localScale = new Vector3(
-                (_audioPeer._Amplitude * _maxScale) + _startScale,
-                (_audioPeer._Amplitude * _maxScale) + _startScale,
-                (_audioPeer._Amplitude * _maxScale) + _startScale
+                (audioVisualizer.amplitude * maxScale) + startScale,
+                (audioVisualizer.amplitude * maxScale) + startScale,
+                (audioVisualizer.amplitude * maxScale) + startScale
             );
-            // _material.SetColor("_Color", _myColor);
-            Color _color = new Color(_red * _audioPeer._Amplitude, _green * _audioPeer._Amplitude, _blue * _audioPeer._Amplitude);
-            // print(_color);
-            _material.SetColor("_EmissionColor", _color);
+            // material.SetColor("Color", myColor);
+            Color color = new Color(red * audioVisualizer.amplitude, green * audioVisualizer.amplitude, blue * audioVisualizer.amplitude);
+            // print(color);
+            material.SetColor("EmissionColor", color);
         }	
 	}
 }

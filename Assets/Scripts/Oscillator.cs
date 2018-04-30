@@ -20,21 +20,19 @@ public class Oscillator : MonoBehaviour {
 
 	void Start()
 	{
-		frequencies = new float[8];
+		frequencies = new float[5];
 		frequencies [0] = 146.83f;
 		frequencies [1] = 174.61f;
 		frequencies [2] = 195.99f;
 		frequencies [3] = 220f;
 		frequencies [4] = 261.62f;
-		frequencies [5] = 740;
-		frequencies [6] = 831;
-		frequencies [7] = 880;
 	}
 
-	public void PlaySound (int note)
+	public void PlaySound (int note, int localOctave)
 	{
 		gain = volume;
-		frequency = frequencies [note];
+		frequency = frequencies [note] * localOctave;
+        print("freq from PlaySound " + frequency);
 	}
 
 

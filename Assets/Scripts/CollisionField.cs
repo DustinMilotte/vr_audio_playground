@@ -10,62 +10,72 @@ public class CollisionField : MonoBehaviour {
 	private Oscillator myOsc;
 	private SynthControl mySynthControl;
 	private bool isPlayingParticles = false;
-    private float bottom;
-    private float top;
+    private float top, bottom, front, back, left, right;
+
     public float noteSpacing = .2f;
 
 
 	void Start () {
 		myOsc = GetComponent<Oscillator>();
-        print("freq [] length " + myOsc.frequencies.Length);
 		mySynthControl = GetComponent<SynthControl>();
 		//RightControllerParticleSystem = GameObject.Find("RightControllerParticleSystem");
 		//particles = RightControllerParticleSystem.GetComponent<ParticleSystem>();
 	}
 
     void Update() {
-        // find the bottom of the box
-        bottom = gameObject.transform.position.y - (gameObject.transform.localScale.y / 2);
-        //print("bottom " + bottom);
-        //print("local y scale " + this.transform.localScale.y);
         top = gameObject.transform.position.y + (gameObject.transform.localScale.y / 2);
+        bottom = gameObject.transform.position.y - (gameObject.transform.localScale.y / 2);
+        front = gameObject.transform.position.z + (gameObject.transform.localScale.z / 2);
+        back = gameObject.transform.position.z - (gameObject.transform.localScale.z / 2);
+        left = gameObject.transform.position.x - (gameObject.transform.localScale.x / 2);
+        right = gameObject.transform.position.x + (gameObject.transform.localScale.x / 2);
     }
 
 	void OnTriggerStay(Collider col){
-        PlaySound(col);
-		Vector3 colPos = col.gameObject.transform.position;
-		//Debug.Log("Tiggered by " + col.gameObject.name + "at " +col.gameObject.transform.position);
-		//if (colPos.y < 1.2) {
-		//		myOsc.PlaySound (0);
-		//} else if (colPos.y < 1.4) {
-		//		myOsc.PlaySound (1);
-		//} else if (colPos.y < 1.6) {
-		//		myOsc.PlaySound (2);
-		//} else if (colPos.y < 1.8) {
-		//		myOsc.PlaySound (3);
-		//} else if (colPos.y < 2) {
-		//	myOsc.PlaySound (4);
-		//} 
+        DetermineNote(col);
+        SetVolume(col);
+        SetCutoffFreq(col);
 
-		mySynthControl.SetVolume(Mathf.Lerp(-80f, 0f, colPos.z));
-		mySynthControl.SetCutoff(Mathf.Lerp(100f, 15000f, colPos.x));
+        //Vector3 colPos = col.gameObject.transform.position;
+        //PlayParticles ();
+    }
 
-		//PlayParticles ();
-	}
-
-    void PlaySound(Collider col) {
+    void DetermineNote(Collider col) {
         Vector3 colPos = col.gameObject.transform.position;
        
         float distFromBottom = colPos.y - bottom;
-        int localOctave = (int)Mathf.Round(distFromBottom / noteSpacing) / (myOsc.frequencies.Length) + 1;
+        int localOctave = (int)Mathf.Round(distFromBottom / noteSpacing) / (myOsc.frequencies.Length);
       
         int note = (int)(Mathf.Round(distFromBottom / noteSpacing) % (myOsc.frequencies.Length));
-        print("octave" + localOctave + "note" + note);
-        //use bottom of gameObject to play sound
+        print("octave: " + localOctave + " note: " + note);
+       
         if (note >= 0) myOsc.PlaySound(note, localOctave);
     }
 
-	void OnTriggerExit(){
+    void SetVolume(Collider col) {
+        Vector3 colPos = col.gameObject.transform.position;
+        //determine where collider is within the box from
+        float distFromBack = colPos.z - back;
+        float localPosZ = distFromBack / gameObject.transform.localScale.z;
+        float clampedLocalPosZ = Mathf.Clamp(localPosZ, 0, 1f);
+     
+
+        mySynthControl.SetVolume(Mathf.Lerp(-80f, 0f, clampedLocalPosZ));
+    }
+
+    void SetCutoffFreq(Collider col) {
+        Vector3 colPos = col.gameObject.transform.position;
+        //determine where collider is within the box from
+        float distFromLeft = colPos.x - left;
+        float localPosX = distFromLeft / gameObject.transform.localScale.x;
+        float clampedLocalPosX = Mathf.Clamp(localPosX, 0, 1f);
+        //print(clampedLocalPosX);
+
+
+        mySynthControl.SetCutoff(Mathf.Lerp(500f, 15000f, clampedLocalPosX));
+    }
+
+    void OnTriggerExit(){
 		myOsc.StopSound();
 		//StopParticles ();
 		Debug.Log("triggerexit");

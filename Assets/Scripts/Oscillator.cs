@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Oscillator : MonoBehaviour {
 
-	public double frequency = 440.0;
+    public double frequency;
 	public float gain;
 	public float volume;
 	public float[] frequencies;
@@ -31,7 +31,7 @@ public class Oscillator : MonoBehaviour {
 	public void PlaySound (int note, int localOctave)
 	{
 		gain = volume;
-		frequency = frequencies [note] * localOctave;
+        frequency = frequencies[note] * Mathf.Pow(2, localOctave);
         print("freq from PlaySound " + frequency);
 	}
 

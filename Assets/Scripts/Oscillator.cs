@@ -15,10 +15,12 @@ public class Oscillator : MonoBehaviour {
 	private double increment;
 	private double phase;
 	private double samplingFrequency = 48000.0;
+    private AudioSource aud;
 
 
 
-	void Start()
+
+    void Start()
 	{
 		frequencies = new float[5];
 		frequencies [0] = 146.83f;
@@ -26,13 +28,34 @@ public class Oscillator : MonoBehaviour {
 		frequencies [2] = 195.99f;
 		frequencies [3] = 220f;
 		frequencies [4] = 261.62f;
-	}
 
-	public void PlaySound (int note, int localOctave)
+        //AudioClip audioClip = AudioClip.Create("myAudioClip", 48000, 2, 48000, false);
+        aud = GetComponent<AudioSource>();
+        //aud.clip = audioClip;
+        //float[] samples = new float[aud.clip.samples * aud.clip.channels];
+        //aud.clip.GetData(samples, 0);
+        //int i = 0;
+        //while(i < samples.Length) {
+        //    samples[i] = samples[i] * 1F;
+        //    ++i;
+        //}
+        //aud.clip.SetData(samples, 0);
+        //aud.loop = true;
+        //aud.Play();
+
+        AudioClip one = AudioClip.Create("one", 1, 1, AudioSettings.outputSampleRate, false);
+        one.SetData(new float[] { 1 }, 0);
+
+        aud.clip = one;
+        aud.loop = true;
+        aud.Play();
+        
+    }
+
+    public void PlaySound (int note, int localOctave)
 	{
 		gain = volume;
         frequency = frequencies[note] * Mathf.Pow(2, localOctave);
-        print("freq from PlaySound " + frequency);
 	}
 
 
@@ -43,7 +66,6 @@ public class Oscillator : MonoBehaviour {
 	void OnAudioFilterRead(float [] data, int channels)
 	{
 		increment = frequency * 2.0 * Mathf.PI / samplingFrequency;
-
 		for (int i = 0; i < data.Length; i += channels) {
 			phase += increment;
 			if (myWave == Waveform.sine) { 

@@ -45,13 +45,14 @@ public class CollisionField : MonoBehaviour {
     void PlaySoundLeft(Collider col) {
         DetermineNote(col, leftOsc);
         SetVolume(col, leftSynthControl);
-        SetCutoffFreq(col, leftSynthControl);
+       // SetCutoffFreq(col, leftSynthControl);
     }
 
     void PlaySoundRight(Collider col) {
         DetermineNote(col, rightOsc);
         SetVolume(col, rightSynthControl);
-        SetCutoffFreq(col, rightSynthControl);
+        //SetCutoffFreq(col, rightSynthControl);
+        SetPan(col, rightSynthControl);
     }
 
     void DetermineNote(Collider col, Oscillator osc) {
@@ -59,7 +60,7 @@ public class CollisionField : MonoBehaviour {
         float distFromBottom = colPos.y - bottom;
         int localOctave = (int)Mathf.Round(distFromBottom / noteSpacing) / (osc.frequencies.Length);
         int note = (int)(Mathf.Round(distFromBottom / noteSpacing) % (osc.frequencies.Length));
-        print("octave: " + localOctave + " note: " + note);
+        //print("octave: " + localOctave + " note: " + note);
 
         if(note >= 0) {
             osc.PlaySound(note, localOctave);
@@ -72,19 +73,33 @@ public class CollisionField : MonoBehaviour {
         float distFromBack = colPos.z - back;
         float localPosZ = distFromBack / gameObject.transform.localScale.z;
         float clampedLocalPosZ = Mathf.Clamp(localPosZ, 0, 1f);
+        // ease out value with Sin, so it gets louder earlier when increasing local Z position
+        float t = Mathf.Sin(clampedLocalPosZ * Mathf.PI * 0.5f);
 
-        sc.SetVolume(Mathf.Lerp(-80f, 0f, clampedLocalPosZ));
+        sc.SetVolume(Mathf.SmoothStep(-80f, 0f, t));
     }
 
     void SetCutoffFreq(Collider col, SynthControl sc) {
+        float xPos = GetLocalXPosition(col);
+        sc.SetCutoff(Mathf.Lerp(500f, 15000f, xPos));
+    }
+
+    void SetPan(Collider col, SynthControl sc) {
+        float xPos = GetLocalXPosition(col);
+        sc.SetPan(Mathf.Lerp(-1f, 1f, xPos));
+    }
+
+    private float GetLocalXPosition(Collider col) {
         Vector3 colPos = col.gameObject.transform.position;
-        //determine where collider is within the box from
         float distFromLeft = colPos.x - left;
         float localPosX = distFromLeft / gameObject.transform.localScale.x;
         float clampedLocalPosX = Mathf.Clamp(localPosX, 0, 1f);
-        //print(clampedLocalPosX);
-        sc.SetCutoff(Mathf.Lerp(500f, 15000f, clampedLocalPosX));
+        return clampedLocalPosX;
     }
+
+    
+
+
 
     void OnTriggerExit(Collider col){
         if (col.gameObject.name == "LeftController") {

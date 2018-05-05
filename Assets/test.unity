@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 870895086}
   m_Layer: 0
   m_Name: SynthBox
-  m_TagString: Untagged
+  m_TagString: Grabbable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -483,7 +483,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!4 &870895085
 Transform:
@@ -520,8 +520,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 910203403}
-  - component: {fileID: 910203402}
   - component: {fileID: 910203404}
+  - component: {fileID: 910203402}
   m_Layer: 0
   m_Name: RightController
   m_TagString: Untagged
@@ -537,16 +537,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 910203401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7808ba4f8712bd47aa07171d6c3070a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2eb980884e7388d499e5a7d45d41ce92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputName: TriggerRight
-  OtherHandReference: {fileID: 1822189509}
   NodeType: 5
-  ObjectGrabOffset: {x: 0, y: 0, z: 0}
-  GrabDistance: 0.1
-  GrabTag: Grab
-  ThrowMultiplier: 1.5
+  grabInputName: GrabRight
+  OtherHandReference: {fileID: 1822189509}
+  currentGrabbedObject: {fileID: 0}
 --- !u!4 &910203403
 Transform:
   m_ObjectHideFlags: 0
@@ -1207,8 +1204,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1822189510}
-  - component: {fileID: 1822189509}
   - component: {fileID: 1822189511}
+  - component: {fileID: 1822189509}
   m_Layer: 0
   m_Name: LeftController
   m_TagString: Untagged
@@ -1224,16 +1221,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1822189508}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7808ba4f8712bd47aa07171d6c3070a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2eb980884e7388d499e5a7d45d41ce92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputName: TriggerLeft
-  OtherHandReference: {fileID: 910203402}
   NodeType: 4
-  ObjectGrabOffset: {x: 0, y: 0, z: 0}
-  GrabDistance: 0.1
-  GrabTag: Grab
-  ThrowMultiplier: 1.5
+  grabInputName: GrabLeft
+  OtherHandReference: {fileID: 910203402}
+  currentGrabbedObject: {fileID: 0}
 --- !u!4 &1822189510
 Transform:
   m_ObjectHideFlags: 0

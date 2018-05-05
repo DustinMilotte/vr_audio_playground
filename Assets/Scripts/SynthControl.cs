@@ -13,7 +13,6 @@ public class SynthControl : MonoBehaviour {
     }
 
     public void SetVolume(float vol){
-        print("vol " + vol);
 		synthMixer.SetFloat ("synthVol", vol);
 	}
 

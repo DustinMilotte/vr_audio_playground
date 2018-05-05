@@ -9,7 +9,7 @@ public class Oscillator : MonoBehaviour {
 	public float volume;
 	public float[] frequencies;
 	public int thisFreq;
-	public enum Waveform {sine, square};
+	public enum Waveform {sine, square, triangle};
 	public Waveform myWave;
 
 	private double increment;
@@ -29,23 +29,9 @@ public class Oscillator : MonoBehaviour {
 		frequencies [3] = 220f;
 		frequencies [4] = 261.62f;
 
-        //AudioClip audioClip = AudioClip.Create("myAudioClip", 48000, 2, 48000, false);
         aud = GetComponent<AudioSource>();
-        //aud.clip = audioClip;
-        //float[] samples = new float[aud.clip.samples * aud.clip.channels];
-        //aud.clip.GetData(samples, 0);
-        //int i = 0;
-        //while(i < samples.Length) {
-        //    samples[i] = samples[i] * 1F;
-        //    ++i;
-        //}
-        //aud.clip.SetData(samples, 0);
-        //aud.loop = true;
-        //aud.Play();
-
         AudioClip one = AudioClip.Create("one", 1, 1, AudioSettings.outputSampleRate, false);
         one.SetData(new float[] { 1 }, 0);
-
         aud.clip = one;
         aud.loop = true;
         aud.Play();
@@ -76,7 +62,9 @@ public class Oscillator : MonoBehaviour {
 				} else {
 					data [i] = (-(float)gain) * 0.6f;
 				}
-			}
+			} else if (myWave == Waveform.triangle) {
+                data[i] = (float)(gain * (double)Mathf.PingPong((float)phase, 1.0f));
+            }
 			if (channels == 2) {
 				data [i + 1] = data [i];
 			}
